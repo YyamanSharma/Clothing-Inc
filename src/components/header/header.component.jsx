@@ -1,5 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+import constants from '../../constants/constants';
 import Logo from '../svg/Logo.component';
 import './header.styles.scss';
 
@@ -10,10 +11,13 @@ const Header = () => (
     </Link>
     <div className='options'>
       <Link className='option' to='/shop'>
-        SHOP
+        {constants.shop}
       </Link>
       <Link className='option' to='/contact'>
-        CONTACT
+        {constants.contact}
+      </Link>
+      <Link className='option' to='/signin'>
+        {constants.signIn}
       </Link>
     </div>
   </div>
