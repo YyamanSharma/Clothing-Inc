@@ -3,7 +3,7 @@ import './sign-in.styles.scss';
 import constants from '../../constants/constants';
 import FormInput from '../form-input/form-input.component';
 import CustomButton from '../custom-button/custom-button.component';
-import { signInWithGoogle } from '../../firebase/firebase.utils';
+import { auth, signInWithGoogle } from '../../firebase/firebase.utils';
 
 class SignIn extends React.Component {
   constructor(props) {
@@ -15,13 +15,20 @@ class SignIn extends React.Component {
     };
   }
 
-  handleSubmit = (e) => {
+  handleSubmit = async (e) => {
     e.preventDefault();
 
-    this.setState({
-      email: '',
-      password: '',
-    });
+    const { email, password } = this.state;
+
+    try {
+      await auth.signInWithEmailAndPassword(email, password);
+      this.setState({
+        email: '',
+        password: '',
+      });
+    } catch (error) {
+      console.error('Error Signing In with Email and Password', error);
+    }
   };
 
   handleChange = (e) => {
@@ -32,6 +39,7 @@ class SignIn extends React.Component {
   };
 
   render() {
+    const { email, password } = this.state;
     return (
       <div className='sign-in'>
         <h2>{constants.alreadyHaveAnAccount}</h2>
@@ -42,7 +50,7 @@ class SignIn extends React.Component {
             type='email'
             label='Email'
             required
-            value={this.state.email}
+            value={email}
             handleChange={this.handleChange}
           />
           <FormInput
@@ -50,12 +58,16 @@ class SignIn extends React.Component {
             type='password'
             label='Password'
             required
-            value={this.state.password}
+            value={password}
             handleChange={this.handleChange}
           />
           <div className='buttons'>
             <CustomButton type='submit'>{constants.signIn}</CustomButton>
-            <CustomButton isGoogleSignIn onClick={signInWithGoogle}>
+            <CustomButton
+              type='button'
+              isGoogleSignIn
+              onClick={signInWithGoogle}
+            >
               {constants.signInWithGoogle}
             </CustomButton>
           </div>
